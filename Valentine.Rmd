@@ -1,0 +1,66 @@
+---
+title: "Valentine"
+output: html_document
+date: "2024-02-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r valentine}
+
+# Create data frame
+dat <- data.frame(t = seq(0, 2*pi, by = 0.1))
+
+# Function for heart geometry
+xhrt <- function(t) 8*sin(t)^3
+yhrt <- function(t) 16*cos(t)-5*cos(2*t)-2*cos(3*t)-cos(4*t)
+
+# Get geometry into data frame
+dat$y <- yhrt(dat$t)
+dat$x <- xhrt(dat$t)
+
+# Plot
+
+library(ggplot2)
+
+# Create a background
+s1 <- ggplot() +
+  theme_void() +
+  theme(
+    plot.background = element_rect(fill = "#939bc9", color = "#939bc9")) +
+  labs(caption = "Minha querida valentina \nFevereiro 2024") +
+  theme(plot.caption = element_text(hjust = 0, color = "#800020", size = 11),
+        panel.border = element_rect(colour = "#FFFFFF", fill = NA, linewidth = 5))
+
+
+
+# add stars
+set.seed(20240214)
+n <- 100
+
+stars <- data.frame(
+  a = runif(n, min = -19, max = 13),
+  b = runif(n, min = -19, max = 13))
+
+s2 <- s1 +
+  geom_point(data = stars, aes(x = a, y = b),
+    colour = "#FFC0CB", pch = 8)
+
+
+# Include the heart
+s3 <- s2 +
+  geom_polygon(data = dat, aes(x = x, y = y), fill = "#800020")
+
+ggsave("valentine.png")
+
+```
+
+
+```{r plot, echo=FALSE}
+s3
+```
+
+
